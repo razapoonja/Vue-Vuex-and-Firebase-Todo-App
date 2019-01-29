@@ -9,7 +9,9 @@
 
     <div v-for="(task, index) in tasks" :key="task.id" class="todo-item">
       <div class="todo-item-left">
-        <div v-if="! task.editing" @dblclick="editTask(task)" class="todo-item-label">
+        <input type="checkbox" v-model="task.completed">
+
+        <div v-if="! task.editing" @dblclick="editTask(task)" class="todo-item-label" :class="{ completed : task.completed}">
           {{ task.title }}
         </div>
 
@@ -24,6 +26,13 @@
       <div class="remove-item" @click="removeTask(index)">
         &times;
       </div>
+    </div>
+
+
+    <div class="extra-container">
+      <div><label><input type="checkbox">Clear All</label></div>
+
+      <div>{{ remaining }} items left</div>
     </div>
   </div>
 </template>
@@ -51,6 +60,12 @@ export default {
           'editing': false
         }
       ]
+    }
+  },
+
+  computed: {
+    remaining() {
+      return this.tasks.filter(task => ! task.completed).length;
     }
   },
 
@@ -151,5 +166,38 @@ export default {
       &:focus {
         outline: none;
       }
+    }
+
+    .completed {
+      text-decoration: line-through;
+      color: grey;
+    }
+
+    .extra-container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 16px;
+      border-top: 1px solid lightgrey;
+      padding-top: 14px;
+      margin-bottom: 14px;
+    }
+
+    button {
+      font-size: 14px;
+      background-color: white;
+      appearance: none;
+
+      &:hover {
+        background: lightgreen;
+      }
+
+      &:focus {
+        outline: none;
+      }
+    }
+
+    .active {
+      background: lightgreen;
     }
 </style>
